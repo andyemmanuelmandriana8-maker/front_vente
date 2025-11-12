@@ -10,27 +10,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
+import { useAuth } from "@/hooks/useAuth"
 
 export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const { login, isLoading, error, clearError } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     
-    // TODO: Implémenter la logique de connexion
-    console.log("Login attempt:", { email, password })
-    
-    // Simuler une requête API
-    setTimeout(() => {
-      setIsLoading(false)
-      // Rediriger vers la page dashboard après connexion
-      navigate("/pages/dashboard")
-    }, 1000)
+    try {
+      await login({ email, password })
+    } catch (err) {
+      // L'erreur est déjà gérée par le hook useAuth
+      console.error("Erreur de connexion:", err)
+    }
   }
 
   return (
@@ -44,6 +40,18 @@ export function LoginForm() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+                {error.message || "Une erreur est survenue lors de la connexion"}
+                {error.errors?.email && (
+                  <ul className="mt-1 list-disc list-inside">
+                    {error.errors.email.map((msg, index) => (
+                      <li key={index}>{msg}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -51,10 +59,19 @@ export function LoginForm() {
                 type="email"
                 placeholder="nom@exemple.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (error) clearError()
+                }}
                 required
                 disabled={isLoading}
+                className={error?.errors?.email ? "border-destructive" : ""}
               />
+              {error?.errors?.email && (
+                <p className="text-sm text-destructive">
+                  {error.errors.email[0]}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -71,10 +88,19 @@ export function LoginForm() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  if (error) clearError()
+                }}
                 required
                 disabled={isLoading}
+                className={error?.errors?.password ? "border-destructive" : ""}
               />
+              {error?.errors?.password && (
+                <p className="text-sm text-destructive">
+                  {error.errors.password[0]}
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">

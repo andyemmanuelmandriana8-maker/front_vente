@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, Users, Package } from "lucide-react"
+import { LayoutDashboard, Package, ShoppingCart, UserCircle, FileText } from "lucide-react"
 
 const menuItems = [
   {
@@ -9,14 +9,24 @@ const menuItems = [
     href: "/pages/dashboard",
   },
   {
-    title: "Utilisateurs",
-    icon: Users,
-    href: "/pages/users",
-  },
-  {
     title: "Produits",
     icon: Package,
     href: "/pages/produits",
+  },
+  {
+    title: "Commandes",
+    icon: ShoppingCart,
+    href: "/pages/commandes",
+  },
+  {
+    title: "Clients",
+    icon: UserCircle,
+    href: "/pages/clients",
+  },
+  {
+    title: "Factures",
+    icon: FileText,
+    href: "/pages/factures",
   },
 ]
 

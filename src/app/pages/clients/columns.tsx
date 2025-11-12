@@ -1,51 +1,58 @@
 import type { Column } from "@/components/tools/DataTable"
-import type { Produit as ProduitType } from "@/types/produit"
 import * as React from "react"
 
-// Type local pour la compatibilité avec l'interface existante
-export interface Produit {
+export type TypePrixClient = "Gros" | "Détaillant" | "Consommateur"
+
+export interface Client {
   id: number
   nom: string
-  prixGros: number
-  prixDetail: number
-  prixConsommateur: number
-  categorie: string
-  category_id?: number
+  prenom: string
+  email?: string
+  telephone: string
+  adresse?: string
+  typePrix: TypePrixClient
 }
 
-// Fonction helper pour convertir ProduitType en Produit local
-export const mapProduitToLocal = (produit: ProduitType): Produit => ({
-  id: produit.id,
-  nom: produit.nom,
-  prixGros: produit.prix_gros,
-  prixDetail: produit.prix_detaillant,
-  prixConsommateur: produit.prix_consommateur,
-  categorie: produit.category?.nom || "",
-  category_id: produit.category_id,
-})
-
 export const createColumns = (
-  onEdit: (produit: Produit) => void,
-  onDelete: (produit: Produit) => void
-): Column<Produit>[] => [
+  onEdit: (client: Client) => void,
+  onDelete: (client: Client) => void
+): Column<Client>[] => [
   {
     key: "nom",
     header: "Nom",
   },
   {
-    key: "prix",
-    header: "Prix",
-    accessor: (row) => (
-      <div className="flex flex-col gap-1 text-xs">
-        <div>Gros: {row.prixGros?.toFixed(2) || "0.00"} Ar</div>
-        <div>Détail: {row.prixDetail?.toFixed(2) || "0.00"} Ar</div>
-        <div>Consommateur: {row.prixConsommateur?.toFixed(2) || "0.00"} Ar</div>
-      </div>
-    ),
+    key: "prenom",
+    header: "Prénom",
   },
   {
-    key: "categorie",
-    header: "Catégorie",
+    key: "telephone",
+    header: "Téléphone",
+  },
+  {
+    key: "email",
+    header: "Email",
+  },
+  {
+    key: "adresse",
+    header: "Adresse",
+    className: "max-w-[300px] truncate",
+  },
+  {
+    key: "typePrix",
+    header: "Type de prix",
+    accessor: (row) => {
+      const typeColors = {
+        Gros: "text-blue-600",
+        Détaillant: "text-green-600",
+        Consommateur: "text-orange-600",
+      }
+      return (
+        <span className={typeColors[row.typePrix] || ""}>
+          {row.typePrix}
+        </span>
+      )
+    },
   },
   {
     key: "actions",

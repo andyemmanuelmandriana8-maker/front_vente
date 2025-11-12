@@ -3,8 +3,10 @@ import LoginPage from './app/auth/login'
 import ForgotPasswordPage from './app/auth/forgotPassword'
 import PagesLayout from './app/pages'
 import DashboardPage from './app/pages/dashboard'
-import UsersPage from './app/pages/users'
 import ProduitsPage from './app/pages/produits'
+import CommandesPage from './app/pages/commandes'
+import ClientsPage from './app/pages/clients'
+import FacturesPage from './app/pages/factures'
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
         <Route path="/pages" element={<PagesLayout />}>
           <Route index element={<Navigate to="/pages/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="users" element={<UsersPage />} />
           <Route path="produits" element={<ProduitsPage />} />
+          <Route path="commandes" element={<CommandesPage />} />
+          <Route path="clients" element={<ClientsPage />} />
+          <Route path="factures" element={<FacturesPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
